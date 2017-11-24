@@ -124,11 +124,7 @@ gulp.task('fonts', function () {
     return fonts;
 });
 
-//
-// BUILD
-gulp.task('build', ['html', 'css', 'js', 'images', 'fonts']);
-
-// BUILD: SERVER
+// TASK: SERVER
 gulp.task('server', function () {
     plugins.browserSync({
         server: {
@@ -138,31 +134,34 @@ gulp.task('server', function () {
     });
 });
 
+// WATCH
+gulp.task('watch', function () {
+
+    // Html
+    gulp.watch(['./src/pages/**/*.html', './src/components/**/*.html'], gulp.series('html'));
+
+    // Css
+    gulp.watch(['./src/scss/style.scss', './src/components/**/*.scss'], gulp.series('css'));
+
+    // Js
+    gulp.watch(['./src/js/app.js', './src/components/**/*.js'], gulp.series('js'));
+
+    // Images
+    gulp.watch(['./src/images/**/*', './src/components/**/images/*'], gulp.series('images'));
+
+    // Fonts
+    gulp.watch(['./src/fonts/**/*', './src/components/*/fonts/**/*'], gulp.series('fonts'));
+});
+
+//
+// BUILD
+gulp.task('build', gulp.parallel('html', 'css', 'js', 'images', 'fonts'));
+
 //
 // DEFAULT
-gulp.task('default', ['build'], function() {
-
-    gulp.start('server');
-
-    // docs
-    gulp.watch(['./src/pages/**/*.html', './src/components/**/*.html'], ['html']);
-
-    // css
-    gulp.watch(['./src/scss/style.scss', './src/components/**/*.scss'], ['css']);
-
-    // js
-    gulp.watch(['./src/js/app.js', './src/components/**/*.js'], ['js']);
-
-    // images
-    gulp.watch(['./src/images/**/*', './src/components/**/images/*'], ['images']);
-
-    // fonts
-    gulp.watch(['./src/fonts/**/*', './src/components/*/fonts/**/*'], ['fonts']);
-});
+gulp.task('default', gulp.series('build', gulp.parallel('server', 'watch')));
 
 //
 // DEPLOY:
 gulp.task('target:prod', function () { _target = 'prod'; });
-gulp.task('prod',
-    plugins.sequence('target:prod', ['default'])
-);
+gulp.task('prod', gulp.series('target:prod','default'));

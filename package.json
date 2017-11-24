@@ -1,7 +1,7 @@
 {
-  "name": "Rapido - A HTML prototyping boilerplate using Gulp, Handlebars and Sass.",
+  "name": "rapido",
   "version": "1.0.0",
-  "description": "",
+  "description": "Rapido - A HTML prototyping boilerplate using Gulp, Handlebars and Sass.",
   "main": "index.js",
   "scripts": {
     "test": "test"
